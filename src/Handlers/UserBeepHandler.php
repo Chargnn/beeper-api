@@ -19,12 +19,13 @@ class UserBeepHandler
     private $users;
     private $authService;
 
-    public function __construct(Request $request,
-                                Response $response,
-                                BeepRepository $beeps,
-                                UserRepository $users,
-                                AuthService $authService)
-    {
+    public function __construct(
+        Request $request,
+        Response $response,
+        BeepRepository $beeps,
+        UserRepository $users,
+        AuthService $authService
+    ) {
         $this->request = $request;
         $this->response = $response;
         $this->beeps = $beeps;
@@ -36,11 +37,14 @@ class UserBeepHandler
     public function getUserBeeps($username, MicroPaginator $paginator, BeepService $beepService)
     {
         $user = $this->users->first(['username' => $username]);
-        if (!$user)
+
+        if (!$user) {
             throw new ApiException(404);
+        }
+
         $beeps = $this->beeps->find(['user_id' => $user['id']]);
 
-        usort($beeps, function($a, $b) {
+        usort($beeps, function ($a, $b) {
             return $a['created_at'] > $b['created_at'] ? -1 : 1;
         });
 
@@ -52,8 +56,7 @@ class UserBeepHandler
         //check if beep liked by currently logged in user
         try {
             $user = $this->authService->getCurrentUser();
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $user = null;
         }
         foreach ($results['data'] as &$beep) {

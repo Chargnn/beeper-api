@@ -25,14 +25,14 @@ class MicroUser implements UserRepository
         }
 
         $newUser = [
-            'id'       => uniqid(),
+            'id' => uniqid(),
             'username' => $data['username'],
-            'email'    => $data['email'],
+            'email' => $data['email'],
             //yep, i'm just storing plain text passwords because this is a demo api using microDB
             //of course, don't do this for production systems, always hash passwords!
             'password' => $data['password'],
-            'about'    => "I like beeping",
-            'avatar'   => "noavatar.jpg"
+            'about' => "I like beeping",
+            'avatar' => "noavatar.jpg"
         ];
 
         $this->usersTable->create($newUser);
@@ -52,7 +52,7 @@ class MicroUser implements UserRepository
     {
         $foundUserID = null;
         $foundUser = null;
-        $this->usersTable->eachId(function($id) use (&$foundUserID, &$foundUser, $userID) {
+        $this->usersTable->eachId(function ($id) use (&$foundUserID, &$foundUser, $userID) {
             $t = $this->usersTable->load($id);
             if ($t['id'] == $userID) {
                 $foundUserID = $id;
@@ -60,8 +60,9 @@ class MicroUser implements UserRepository
             }
         });
 
-        if (!$foundUserID)
+        if (!$foundUserID) {
             throw new \RuntimeException("User couldn't be found");
+        }
 
         //update username
         if (isset($data['username'])) {
@@ -69,8 +70,9 @@ class MicroUser implements UserRepository
                 return $user['username'] == $data['username'];
             });
 
-            if ($t && $t['id'] != $userID)
+            if ($t && $t['id'] != $userID) {
                 throw new ApiException(422, ['Username already taken']);
+            }
 
             $foundUser['username'] = $data['username'];
         }
@@ -82,8 +84,9 @@ class MicroUser implements UserRepository
 
         //update password
         if (isset($data['password'])) {
-            if (!isset($data['new_password']) || !$data['new_password'])
+            if (!isset($data['new_password']) || !$data['new_password']) {
                 throw new ApiException(422, ['You must enter new password too']);
+            }
 
             $foundUser['password'] = $data['new_password'];
         }

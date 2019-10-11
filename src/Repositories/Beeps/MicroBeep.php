@@ -23,7 +23,7 @@ class MicroBeep implements BeepRepository
         $beep = [
             'id' => uniqid(),
             'user_id' => $createdBy['id'],
-            'text' => (string) $data['text'],
+            'text' => (string)$data['text'],
             'likes' => [],
             'created_at' => time(),
         ];
@@ -46,7 +46,7 @@ class MicroBeep implements BeepRepository
     public function attachAuthors($beeps)
     {
         foreach ($beeps as &$beep) {
-            $user = $this->users->first(function($u) use ($beep) {
+            $user = $this->users->first(function ($u) use ($beep) {
                 return $beep['user_id'] == $u['id'];
             });
             $beep['author'] = [
@@ -62,7 +62,7 @@ class MicroBeep implements BeepRepository
     {
         $foundBeepID = null;
         $foundBeep = null;
-        $this->beepsTable->eachId(function($id) use (&$foundBeepID, &$foundBeep, $beepID) {
+        $this->beepsTable->eachId(function ($id) use (&$foundBeepID, &$foundBeep, $beepID) {
             $t = $this->beepsTable->load($id);
             if ($t['id'] == $beepID) {
                 $foundBeepID = $id;
@@ -70,14 +70,13 @@ class MicroBeep implements BeepRepository
             }
         });
 
-        if (!$foundBeep)
+        if (!$foundBeep) {
             throw new ApiException(422, ['Beep doesn\'t exist!']);
+        }
 
-        if (in_array($user['id'], $foundBeep['likes'])) {
-            //unlike
+        if (in_array($user['id'], $foundBeep['likes'])) { //unlike
             unset($foundBeep['likes'][array_search($user['id'], $foundBeep['likes'])]);
-        } else {
-            //like
+        } else { //like
             $foundBeep['likes'][] = $user['id'];
         }
 

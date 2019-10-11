@@ -13,6 +13,7 @@
         "psr-4": {"BeeperApi\\": "src/"}
     },
     "require": {
+        "php": ">=7.2",
         "morris/microdb": "^0.1.0",
         "firebase/php-jwt": "^4.0",
         "rdlowrey/auryn": "^1.4",

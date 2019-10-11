@@ -17,10 +17,7 @@ class UserHandler
     private $users;
     private $authService;
 
-    public function __construct(Request $request,
-                                Response $response,
-                                UserRepository $users,
-                                AuthService $authService)
+    public function __construct(Request $request, Response $response, UserRepository $users, AuthService $authService)
     {
         $this->request = $request;
         $this->response = $response;
@@ -54,8 +51,8 @@ class UserHandler
         } else {
             $this->response->setContent([
                 'username' => $user['username'],
-                'about'    => $user['about'],
-                'avatar'   => 'http://' . $_SERVER['HTTP_HOST'] . '/public/images/' . $user['avatar']
+                'about' => $user['about'],
+                'avatar' => 'http://' . $_SERVER['HTTP_HOST'] . '/public/images/' . $user['avatar']
             ]);
         }
 
@@ -89,7 +86,7 @@ class UserHandler
         $this->users->update($user['id'], ['avatar' => $avatarName]);
 
         $this->response->setContent([
-            'avatar'   => 'http://' . $_SERVER['HTTP_HOST'] . '/public/images/' . $avatarName,
+            'avatar' => 'http://' . $_SERVER['HTTP_HOST'] . '/public/images/' . $avatarName,
         ]);
     }
 }

@@ -33,27 +33,24 @@ class AuthService
     {
         $expMessage = "Looks like your session expired or you weren't logged in, please log in again.";
         $errMessage = "There was an issue while attempting to authorize your request, please login again.";
-
         $token = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : null;
 
-        if (!$token)
+        if (!$token) {
             throw new ApiException(401, [$expMessage]);
+        }
 
         $token = explode(" ", $token);
-            if (!isset($token[1]))
-                throw new ApiException(401, [$errMessage]);
+        if (!isset($token[1])) {
+            throw new ApiException(401, [$errMessage]);
+        }
 
         $token = $token[1];
 
         try {
             $decoded = JWT::decode($token, $this->key, ['HS256']);
-        }
-        catch (ExpiredException $e)
-        {
+        } catch (ExpiredException $e) {
             throw new ApiException(401, [$expMessage]);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             throw new ApiException(401, [$errMessage]);
         }
 
@@ -61,8 +58,9 @@ class AuthService
             'id' => $decoded->user_id
         ]);
 
-        if (!$user)
+        if (!$user) {
             throw new ApiException(401, [$errMessage]);
+        }
 
         return $user;
     }

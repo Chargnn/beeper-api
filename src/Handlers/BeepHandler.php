@@ -17,10 +17,7 @@ class BeepHandler
     private $beeps;
     private $authService;
 
-    public function __construct(Request $request,
-                                Response $response,
-                                BeepRepository $beeps,
-                                AuthService $authService)
+    public function __construct(Request $request, Response $response, BeepRepository $beeps, AuthService $authService)
     {
         $this->request = $request;
         $this->response = $response;
@@ -32,12 +29,14 @@ class BeepHandler
     {
         $user = $this->authService->getCurrentUser();
 
-        $beeps = $this->beeps->find(function(){return true;});
-        usort($beeps, function($a, $b) {
+        $beeps = $this->beeps->find(function () {
+            return true;
+        });
+        usort($beeps, function ($a, $b) {
             return $a['created_at'] > $b['created_at'] ? -1 : 1;
         });
 
-        $page = (int) isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+        $page = (int)isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
         $results = $paginator->paginate($beeps, $page);
 
         $results['data'] = $this->beeps->attachAuthors($results['data']);
